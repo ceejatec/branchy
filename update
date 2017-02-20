@@ -1,0 +1,20 @@
+#!/bin/bash -ex
+
+git clone ssh://git@github.com/ceejatec/ns_server
+cd ns_server
+git config user.name "Chris Hillery"
+git config user.email "ceej@couchbase.com"
+git remote add upstream git://github.com/couchbase/ns_server
+git fetch --all
+git merge --log --no-ff --no-edit upstream/master
+git push origin HEAD:master
+
+cd ..
+git clone ssh://git@github.com/couchbaselabs/analytics-dcp-client
+cd analytics-dcp-client
+git config user.name "Chris Hillery"
+git config user.email "ceej@couchbase.com"
+git remote add upstream git://github.com/couchbaselabs/java-dcp-client
+git fetch --all
+git merge --log --no-ff --no-edit upstream/master
+git push origin HEAD:master
