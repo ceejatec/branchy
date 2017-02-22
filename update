@@ -12,9 +12,17 @@ git push origin HEAD:master
 cd ..
 git clone ssh://git@github.com/couchbaselabs/analytics-dcp-client
 cd analytics-dcp-client
+gitdir=$(git rev-parse --git-dir)
+scp -p -P 29418 review.couchbase.org:hooks/commit-msg ${gitdir}/hooks/
 git config user.name "Chris Hillery"
 git config user.email "ceej@couchbase.com"
 git remote add upstream git://github.com/couchbaselabs/java-dcp-client
+git remote add gerrit ssh://review.couchbase.org/analytics-dcp-client.git
 git fetch --all
-git merge --log --no-ff --no-edit upstream/master
-git push origin HEAD:master
+git diff upstream/master gerrit/upstream > /dev/null
+if [ $? != 0 ]
+then
+  git push gerrit upstream/master:refs/heads/upstream
+  git merge --log --no-ff --no-edit upstream/master
+  git push gerrit HEAD:master
+fi
